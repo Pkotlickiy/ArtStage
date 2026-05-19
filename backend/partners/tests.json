@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "name": "GET partners list",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": { "partners": [{ "name": "BrandCo" }] },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

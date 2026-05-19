@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "name": "GET all service pages",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": { "pages": [{ "slug": "montazh-scen" }] },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
