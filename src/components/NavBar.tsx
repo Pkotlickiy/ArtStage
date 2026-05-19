@@ -1,15 +1,12 @@
-cat > src/components/Header.tsx << 'EOF'
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import Icon from "@/components/ui/icon";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-
-  const isHome = location.pathname === "/";
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 50);
@@ -27,10 +24,27 @@ const NavBar = () => {
 
   const handleNavClick = (id: string) => {
     setMobileOpen(false);
-    if (isHome) {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    
+    // Если мы не на главной странице, сначала переходим на неё
+    if (location.pathname !== "/") {
+      navigate("/");
+      // Ждем перехода, затем скроллим
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) element.scrollIntoView({ behavior: "smooth" });
+      }, 100);
     } else {
-      navigate(`/#${id}`);
+      // Если уже на главной, просто скроллим
+      const element = document.getElementById(id);
+      if (element) element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleLogoClick = () => {
+    if (location.pathname !== "/") {
+      navigate("/");
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -38,8 +52,8 @@ const NavBar = () => {
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-[#0A0A0F]/95 backdrop-blur-md border-b border-white/5" : ""}`}>
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <div 
+          onClick={handleLogoClick}
           className="font-display font-black text-xl tracking-tight cursor-pointer"
-          onClick={() => navigate("/")}
         >
           <span className="text-gradient-orange">ARTSTAGE</span>
           <span className="text-white/50">.PRO</span>
@@ -83,4 +97,3 @@ const NavBar = () => {
 };
 
 export default NavBar;
-EOF
